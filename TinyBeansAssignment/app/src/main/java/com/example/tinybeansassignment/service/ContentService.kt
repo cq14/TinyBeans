@@ -28,4 +28,15 @@ class ContentService(val apiService: ApiService) {
         }
     }
 
+    //API-2
+    fun getListContent() = CoroutineScope(Dispatchers.IO).async {
+        try{
+            val response = apiService.createTinyBeanInterface().getListContent().execute()
+            return@async response.body()
+        }catch (exc: Exception){
+            Log.e(tag, "Exception caught on ContentService.getListContent(): $exc")
+            return@async null
+        }
+    }
+
 }

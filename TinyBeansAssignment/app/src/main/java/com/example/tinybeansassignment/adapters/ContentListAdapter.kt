@@ -7,6 +7,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
 import android.view.ViewGroup
+import android.view.animation.AlphaAnimation
 import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -23,6 +24,8 @@ import com.squareup.picasso.Picasso
 
 class ContentListAdapter(val viewModel: ScreenOneViewModel, val context: Context): RecyclerView.Adapter<ContentListAdapter.ContentView>() {
     var mapImageViewArray = mutableMapOf<Int,ImageView>()
+    private val FADE_DURATION: Long = 500
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContentView {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding: ViewDataBinding = DataBindingUtil.inflate(layoutInflater, R.layout.item_content_view, parent, false)
@@ -32,7 +35,9 @@ class ContentListAdapter(val viewModel: ScreenOneViewModel, val context: Context
     @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: ContentView, position: Int) {
         holder.bind(viewModel, position)
-
+        holder.itemView.setOnClickListener {
+            viewModel.loadScreenTwoData()
+        }
         //initiate map - different ImageView per row
         mapImageViewArray[0] = holder.itemView.findViewById(R.id.image1)
         mapImageViewArray[1] = holder.itemView.findViewById(R.id.image2)
@@ -95,14 +100,17 @@ class ContentListAdapter(val viewModel: ScreenOneViewModel, val context: Context
             val carouselLayoutManager = carouselView.getCarouselLayoutManager()
             val currentlyCenterPosition = carouselView.getSelectedPosition()
         }
-
-
-
-
+        setFadeAnimation(holder.itemView);
     }
 
     override fun getItemCount(): Int {
         return viewModel.contentList.size
+    }
+
+    private fun setFadeAnimation(view: View) {
+        val anim = AlphaAnimation(0.0f, 1.0f)
+        anim.duration = FADE_DURATION
+        view.startAnimation(anim)
     }
 
     class ContentView(val binding: ViewDataBinding): RecyclerView.ViewHolder(binding.root){

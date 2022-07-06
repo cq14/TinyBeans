@@ -43,6 +43,15 @@ class ScreenOneFragment : Fragment() {
                 viewModel.contentAdapter.notifyDataSetChanged()
             }
         })
+        viewModel.screenTwoContent.observe(viewLifecycleOwner, Observer {
+            if(it != null && it.isNotEmpty()){
+                //successful response
+                (activity as MainActivity).changeFragment(ScreenTwoFragment(it))
+            }
+            else{
+                (activity as MainActivity).displayAlert("Error", "There was an issue loading images for Screen Two.")
+            }
+        })
         val view = binding.root
         contentRecycler = view.findViewById(R.id.content_one_recycler)
 
@@ -54,7 +63,7 @@ class ScreenOneFragment : Fragment() {
         viewModel.loadData()
         contentRecycler.layoutManager = LinearLayoutManager(requireContext())
         contentRecycler.adapter = viewModel.contentAdapter
-        contentRecycler.addItemDecoration(SimpleDividerItem(requireContext()))
+        //contentRecycler.addItemDecoration(SimpleDividerItem(requireContext()))
     }
 
 }

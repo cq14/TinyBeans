@@ -2,7 +2,9 @@ package com.example.tinybeansassignment.service
 
 import android.content.Context
 import com.example.tinybeansassignment.R
+import com.example.tinybeansassignment.models.API2Response
 import com.example.tinybeansassignment.models.ContentResponse
+import com.example.tinybeansassignment.models.Image
 import com.example.tinybeansassignment.models.ImagesFromContentResponse
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
@@ -39,6 +41,8 @@ class ApiService(val context: Context) {
 interface TinyBeansInterface{
     @GET("/content")
     fun getContent(): Call<ContentResponse>
-    @GET()
+    @GET
     fun getImagesFromContent(@Url url: String): Call<ImagesFromContentResponse>
+    @GET("/list")
+    fun getListContent(): Call<API2Response>
 }

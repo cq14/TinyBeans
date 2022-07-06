@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 
 class ScreenOneViewModel(val contentService: ContentService): ViewModel() {
     var contentList = listOf<Content>()
+    var screenTwoContent = MutableLiveData<List<Image>>()
     val isLoading = MutableLiveData<Boolean>().apply { value = false }
     val contentAdapter: ContentListAdapter = ContentListAdapter(this, contentService.apiService.context)
 
@@ -26,6 +27,7 @@ class ScreenOneViewModel(val contentService: ContentService): ViewModel() {
                 if(response?.content != null){
                     //need to reformat to handle url to image
                     for(content in response.content){
+                        //add images to carousel object
                         if(content.url != null && content.url.contains("mockable.io")){
                             var path = content.url.split("mockable.io")[1]
                             val innerResponse = contentService.getImagesFromContent(path).await()
@@ -38,6 +40,19 @@ class ScreenOneViewModel(val contentService: ContentService): ViewModel() {
                 }
             }catch(exc: Exception){
                 Log.e("ScreenOneVM.loadData():", "$exc")
+            }
+            isLoading.postValue(false)
+        }
+    }
+
+    fun loadScreenTwoData(){
+        isLoading.value = true
+        GlobalScope.launch(Dispatchers.IO){
+            try{
+                val response = contentService.getListContent().await()
+                screenTwoContent.postValue(response?.images)
+            }catch(exc: Exception){
+                Log.e("loadScreenTwoData():", "$exc")
             }
             isLoading.postValue(false)
         }

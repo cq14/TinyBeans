@@ -8,6 +8,11 @@ data class ContentResponse(
     val content: List<Content>
 ): Serializable
 
+data class API2Response(
+    @SerializedName("images")
+    val images: List<Image>
+)
+
 data class ImagesFromContentResponse(
     @SerializedName("images")
     val images: List<Image>
