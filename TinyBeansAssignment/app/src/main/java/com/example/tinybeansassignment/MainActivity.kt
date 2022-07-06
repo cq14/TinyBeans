@@ -3,6 +3,7 @@ package com.example.tinybeansassignment
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.Window
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -25,13 +26,6 @@ class MainActivity : AppCompatActivity() {
         changeFragment(ScreenOneFragment())
     }
 
-    override fun onBackPressed() {
-        if(currentFragment is ScreenTwoFragment)
-            changeFragment(ScreenOneFragment())
-        else
-            super.onBackPressed()
-    }
-
     fun changeFragment(fragment: Fragment){
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.content, fragment, fragment.javaClass.simpleName)
@@ -40,6 +34,14 @@ class MainActivity : AppCompatActivity() {
         currentFragment = fragment
         val displayBackButton = fragment is ScreenTwoFragment
         supportActionBar?.setDisplayHomeAsUpEnabled(displayBackButton)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(currentFragment is ScreenTwoFragment)
+            changeFragment(ScreenOneFragment())
+        else
+            super.onBackPressed()
+        return super.onOptionsItemSelected(item)
     }
 
     fun showLoading(isVisible: Boolean = true){
